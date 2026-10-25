@@ -32,6 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-### Environment Secrets ###
+### Environment Secrets & Database Dumps ###
 .env
+*.sql
 
