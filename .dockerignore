@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE / Editor configuration
+.idea
+*.iml
+.vscode
+.settings
+.project
+.classpath
+
+# Build artifacts and local outputs
+target/
+*.log
+cookie.txt
+
+# Documentation & temporary files
+HELP.md
+Dockerfile*
+docker-compose*.yml
+README*.md
