@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cabinet Safety Dashboard</title>
+    <link rel="stylesheet" href="login.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <div class="header">
+        <p class="header-title">Cabinet Safety</p>
+        <div class="nav-links">
+            <button class="nav-button" onclick="location.href='/index.html'">Home</button>
+            <button class="nav-button" onclick="location.href='/index.html'">Dashboard</button>
+            <button class="nav-button" onclick="location.href='/chemicals.html'">Chemicals</button>
+            <button class="nav-button" onclick="location.href='/login.html'">Login</button>
+        </div>
+    </div>
+
+    <!-- Centered Glassmorphism Login Card -->
+    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 120px);">
+        <div class="container" style="position: relative;" id="Logincard">
+            
+            <div class="xmark"><i class="fa-solid fa-xmark" id="close-btn" title="Back to Dashboard"></i></div>
+
+            <div class="login-header-wrapper">
+                <h1 class="login-title">Login</h1>
+            </div>
+
+            <!-- Dynamic Alert Messages -->
+            <div id="error-alert" class="alert-box error" style="display: none;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Invalid username or password. Please try again.</span>
+            </div>
+
+            <div id="logout-alert" class="alert-box success" style="display: none;">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>You have been logged out successfully.</span>
+            </div>
+
+            <div class="form-wrapper">
+                <form id="loginForm" action="/login" method="POST">
+                    
+                    <!-- Username Field -->
+                    <label id="Username" for="usernameBox">username&nbsp;&nbsp;</label>
+                    <div class="input-box-wrapper">
+                        <input type="text" id="usernameBox" name="username" placeholder="Enter username" required autocomplete="username">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <!-- Password Field -->
+                    <label id="password" for="passwordBox">password&nbsp;&nbsp;</label>
+                    <div class="input-box-wrapper">
+                        <input type="password" id="passwordBox" name="password" placeholder="Enter password" required autocomplete="current-password">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <!-- Options Row -->
+                    <div id="options">
+                        <div class="remember-me-wrapper">
+                            <label for="rememberMe">Remember me</label>
+                            <input type="checkbox" id="rememberMe" name="remember-me" class="checkbox-input">
+                        </div>
+                        <div id="forgot">
+                            <a href="#" onclick="alert('Please contact your administrator to reset credentials.'); return false;">Forgot Password ?</a>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="submit-wrapper">
+                        <button type="submit" class="submit-button" id="submitBtn">Submit</button>
+                    </div>
+
+                    <!-- Register Footer Link -->
+                    <div class="register-wrapper">
+                        <p>Don't have an account? <a href="#" onclick="alert('Registration is managed by administrators in the Users panel.'); return false;">register</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Hint for Demo/Testing -->
+            <div class="creds-hint">
+                Default: <strong>dheepak</strong> / <strong>admin123</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const closeButton = document.getElementById("close-btn");
+        const loginCard = document.getElementById("Logincard");
+
+        if (closeButton && loginCard) {
+            closeButton.addEventListener("click", function(){
+                window.location.href = "/index.html";
+            });
+        }
+
+        // Check URL parameters for error or logout flags
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorAlert = document.getElementById('error-alert');
+        const logoutAlert = document.getElementById('logout-alert');
+
+        if (urlParams.has('error') && errorAlert) {
+            errorAlert.style.display = 'flex';
+        }
+        if (urlParams.has('logout') && logoutAlert) {
+            logoutAlert.style.display = 'flex';
+        }
+
+        // Hide alert when user starts typing fresh credentials
+        const usernameInput = document.getElementById('usernameBox');
+        const passwordInput = document.getElementById('passwordBox');
+        if (usernameInput) {
+            usernameInput.addEventListener('input', () => {
+                if (errorAlert) errorAlert.style.display = 'none';
+            });
+        }
+        if (passwordInput) {
+            passwordInput.addEventListener('input', () => {
+                if (errorAlert) errorAlert.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

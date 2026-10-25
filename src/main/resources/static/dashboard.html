@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Storage Safety Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ai-assistant.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation (Referenced from downloads/project) -->
+    <div id="sidebar-backdrop"></div>
+    <nav id="sidebar">
+        <div id="sidebar-header">
+            <span><i class="fa-solid fa-shield-halved" style="color: #38bdf8; margin-right: 8px;"></i> SafeChem</span>
+            <span id="sidebar-close">&times;</span>
+        </div>
+        <ul>
+            <li><a href="index.html" class="active"><i class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
+            <li><a href="chemicals.html"><i class="fa-solid fa-flask-vial"></i> Chemicals</a></li>
+            <li><a href="users.html"><i class="fa-solid fa-users-gear"></i> Users</a></li>
+        </ul>
+        <div id="sidebar-footer">
+            <a href="/logout" style="color: #ef4444; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Full-width edge-to-edge Top Header (No Margins) -->
+    <header>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div id="menuIcon" title="Open Navigation Menu">&#9776;</div>
+            <h1 id="page-title">DashBoard</h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="header-user-profile" title="Current authenticated user">
+                <div class="header-user-details">
+                    <span id="headerUserName" class="header-user-name">--</span>
+                    <span id="headerUserRole" class="header-user-role-badge">USER</span>
+                </div>
+                <img id="headerUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80" alt="User" class="header-user-avatar">
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+
+        <!-- ═════════════════════════════════════════════════════════ -->
+        <!-- VIEW 1: CHEMICALS OVERVIEW WITH VIEW BUTTONS             -->
+        <!-- ═════════════════════════════════════════════════════════ -->
+        <section id="overview-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 style="margin: 0; color: #1e293b; font-size: 1.3rem;">Chemical Storage Units</h2>
+                    <p style="margin: 0.25rem 0 0 0; color: #1e293b; font-size: 0.9rem;">Select any chemical below to open its dedicated live monitoring dashboard.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <div class="search-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass" style="color: #1e293b;"></i>
+                        <input type="text" id="dashboardSearchInput" placeholder="Search chemicals by name or formula...">
+                    </div>
+                    <a href="chemicals.html" class="btn" style="background: #333333; color: white; text-decoration: none; font-size: 0.85rem; padding: 0.5rem 0.95rem;">
+                        Manage Chemicals
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grid of Chemical Cards with View Buttons -->
+            <div id="chemicals-overview-grid" class="dash-overview-grid">
+                <p style="color: #1e293b;">Loading chemicals...</p>
+            </div>
+        </section>
+
+        <!-- ═════════════════════════════════════════════════════════ -->
+        <!-- VIEW 2: DEDICATED SINGLE CHEMICAL DASHBOARD              -->
+        <!-- ═════════════════════════════════════════════════════════ -->
+        <section id="single-chemical-view" style="display: none;">
+            <!-- Top Navigation Bar (Outside the card div) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+                <button id="btn-back-overview" class="btn-back-overview">
+                    <i class="fa-solid fa-arrow-left"></i> All Chemicals
+                </button>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span id="single-chem-active-badge" class="badge-active-pill" style="display: none;">
+                        <i class="fa-solid fa-circle-dot"></i> Monitored in Cabinet
+                    </span>
+                    <button id="btn-set-active-cabinet" class="btn" style="display: none; background: #333333; color: white; padding: 7px 16px; font-size: 0.88rem; font-weight: 600; border-radius: 8px; cursor: pointer; border: none;">
+                        <i class="fa-solid fa-box-archive"></i> Set as Monitored in Cabinet
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Hero Banner with Chemical Image -->
+            <div class="single-chem-hero">
+                <div class="single-chem-img-wrapper">
+                    <img id="single-chem-img" src="" alt="Chemical" class="single-chem-img" onerror="this.src='https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400'">
+                </div>
+                <div class="single-chem-hero-content">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <h2 id="single-chem-name" style="margin: 0; color: #0f172a; font-size: 1.45rem;">Chemical Name</h2>
+                            <span id="single-chem-formula" class="dash-chem-formula">Formula</span>
+                        </div>
+                        <span id="single-chem-hazard" class="badge badge-hazard" style="margin-top: 6px; display: inline-block;">Hazard Category</span>
+                        <p id="single-chem-instructions" style="margin: 0.5rem 0 0 0; color: #1e293b; font-size: 0.88rem; line-height: 1.4;">Storage Instructions</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Current Readings Cards -->
+            <section class="current-readings">
+                <div class="card" id="temp-card">
+                    <div class="card-icon" id="temp-icon">
+                        <i class="fa-solid fa-temperature-half"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title-row">
+                            <h3>Temperature</h3>
+                            <span class="threshold-hint" id="temp-threshold-hint">Max -- °C</span>
+                        </div>
+                        <div class="reading-value-row">
+                            <p id="temp-val">-- °C</p>
+                            <span id="temp-status" class="badge badge-neutral">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="hum-card">
+                    <div class="card-icon" id="hum-icon">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title-row">
+                            <h3>Humidity</h3>
+                            <span class="threshold-hint" id="hum-threshold-hint">Max -- %</span>
+                        </div>
+                        <div class="reading-value-row">
+                            <p id="hum-val">-- %</p>
+                            <span id="hum-status" class="badge badge-neutral">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ultrasonic Security Radar Card -->
+                <div class="card" id="us-card">
+                    <div class="card-icon us-icon" id="us-icon">
+                        <i class="fa-solid fa-radar"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title-row">
+                            <h3>Cabinet Radar</h3>
+                            <span class="threshold-hint" id="us-threshold-hint">Wake limit: &le; 10.0 cm</span>
+                        </div>
+                        <div class="reading-value-row">
+                            <p id="us-val">-- cm</p>
+                            <span id="us-status" class="badge badge-armed">LOCKED</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="reading-meta-bar">
+                <span id="last-updated-text"><i class="fa-regular fa-clock"></i> Last Reading: Waiting for sensor...</span>
+                <span class="storage-note"><i class="fa-solid fa-shield-halved"></i> Live monitoring active (Safe readings transient, danger events logged)</span>
+            </div>
+
+            <!-- Hardware Override & Actuator Controls -->
+            <section class="hardware-controls-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.15rem; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-sliders" style="color: #0284c7;"></i> Hardware Actuator & Security Controls
+                        </h3>
+                        <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #1e293b; font-weight: 500;">
+                            Components operate automatically during safe/hazard states. When <strong>Cabinet Lock</strong> is armed, ultrasonic sensor wakes up to guard against physical interruption.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="actuators-grid">
+                    <!-- Cabinet Security Lock Card -->
+                    <div class="actuator-card locked" id="actuator-lock-card">
+                        <div>
+                            <div class="actuator-header">
+                                <div class="actuator-icon lock-icon locked" id="lock-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div>
+                                    <h4 class="actuator-title">Cabinet Security Lock</h4>
+                                    <span class="actuator-status-pill normal" id="lock-status-pill">
+                                        <i class="fa-solid fa-lock"></i> Locked & Armed
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="actuator-desc" id="lock-desc">Armed: Ultrasonic sensor wakes up. Any physical obstacle closer than threshold triggers Interruption Danger.</p>
+
+                            <!-- Distance Trigger Threshold Setting -->
+                            <div class="actuator-dimmer" style="margin-bottom: 0.85rem;">
+                                <div class="actuator-dimmer-header">
+                                    <span><i class="fa-solid fa-ruler-horizontal" style="color: #0284c7;"></i> Trigger Distance</span>
+                                    <span class="actuator-dimmer-val" id="distance-threshold-val" style="color: #0284c7; background: #e0f2fe;">10.0 cm</span>
+                                </div>
+                                <div class="threshold-input-group">
+                                    <input type="number" step="0.5" min="1" max="100" class="threshold-number-input" id="distance-threshold-input" value="10.0" onchange="sendDistanceThreshold(this.value)">
+                                    <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">cm (wake trigger)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actuator-actions">
+                            <button type="button" class="btn-actuator lock active" id="btn-lock-arm" onclick="setCabinetLock('LOCKED')">
+                                <i class="fa-solid fa-lock"></i> Lock & Arm
+                            </button>
+                            <button type="button" class="btn-actuator unlock" id="btn-lock-disarm" onclick="setCabinetLock('UNLOCKED')">
+                                <i class="fa-solid fa-lock-open"></i> Unlock
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Exhaust Fan Card -->
+                    <div class="actuator-card normal" id="actuator-fan-card">
+                        <div>
+                            <div class="actuator-header">
+                                <div class="actuator-icon fan-icon"><i class="fa-solid fa-fan"></i></div>
+                                <div>
+                                    <h4 class="actuator-title">Exhaust Fan (Relay)</h4>
+                                    <span class="actuator-status-pill normal" id="fan-status-pill">
+                                        <i class="fa-solid fa-circle-check"></i> Normal
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="actuator-desc" id="fan-desc">Automatic: Operates normally based on hazard limits.</p>
+                        </div>
+                        <div class="actuator-actions">
+                            <button type="button" class="btn-actuator stop" id="btn-fan-stop" onclick="setDeviceMode('fan', 'STOPPED')">
+                                <i class="fa-solid fa-ban"></i> Stop
+                            </button>
+                            <button type="button" class="btn-actuator resume active" id="btn-fan-resume" onclick="setDeviceMode('fan', 'NORMAL')">
+                                <i class="fa-solid fa-play"></i> Resume
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Alarm Buzzer Card -->
+                    <div class="actuator-card normal" id="actuator-buzzer-card">
+                        <div>
+                            <div class="actuator-header">
+                                <div class="actuator-icon buzzer-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                                <div>
+                                    <h4 class="actuator-title">Alarm Buzzer</h4>
+                                    <span class="actuator-status-pill normal" id="buzzer-status-pill">
+                                        <i class="fa-solid fa-circle-check"></i> Normal
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="actuator-desc" id="buzzer-desc">Automatic: Sounds alarm siren when limits breached.</p>
+
+                            <!-- Buzzer Tone Pattern & Volume Controls -->
+                            <div class="actuator-dimmer" id="buzzer-dimmer-container" style="margin-bottom: 0.85rem;">
+                                <div class="actuator-dimmer-header">
+                                    <span><i class="fa-solid fa-wave-square" style="color: #ea580c;"></i> Siren Pattern</span>
+                                    <span class="actuator-dimmer-val buzzer-val" id="buzzer-pattern-val">Continuous</span>
+                                </div>
+                                <div class="buzzer-pattern-group" id="buzzer-pattern-group">
+                                    <button type="button" class="btn-pattern-pill active" data-pattern="CONTINUOUS" onclick="setBuzzerPattern('CONTINUOUS')">Continuous</button>
+                                    <button type="button" class="btn-pattern-pill" data-pattern="URGENT" onclick="setBuzzerPattern('URGENT')">Fast Beep</button>
+                                    <button type="button" class="btn-pattern-pill" data-pattern="PULSE" onclick="setBuzzerPattern('PULSE')">Slow Pulse</button>
+                                    <button type="button" class="btn-pattern-pill" data-pattern="CHIRP" onclick="setBuzzerPattern('CHIRP')">Double Chirp</button>
+                                </div>
+
+                                <!-- Volume Slider -->
+                                <div style="margin-top: 0.75rem;">
+                                    <div class="actuator-dimmer-header">
+                                        <span><i class="fa-solid fa-volume-high" style="color: #ea580c;"></i> Volume</span>
+                                        <span class="actuator-dimmer-val buzzer-val" id="buzzer-volume-val">100%</span>
+                                    </div>
+                                    <input type="range" class="actuator-slider buzzer-slider" id="buzzer-volume-slider" min="0" max="100" value="100" oninput="onBuzzerVolumeInput(this.value)" onchange="sendBuzzerVolume(this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actuator-actions">
+                            <button type="button" class="btn-actuator stop" id="btn-buzzer-stop" onclick="setDeviceMode('buzzer', 'STOPPED')">
+                                <i class="fa-solid fa-volume-xmark"></i> Stop
+                            </button>
+                            <button type="button" class="btn-actuator resume active" id="btn-buzzer-resume" onclick="setDeviceMode('buzzer', 'NORMAL')">
+                                <i class="fa-solid fa-play"></i> Resume
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Warning Light / LED Card -->
+                    <div class="actuator-card normal" id="actuator-light-card">
+                        <div>
+                            <div class="actuator-header">
+                                <div class="actuator-icon light-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                                <div>
+                                    <h4 class="actuator-title">Cabinet Light (LED)</h4>
+                                    <span class="actuator-status-pill normal" id="light-status-pill">
+                                        <i class="fa-solid fa-circle-check"></i> Normal
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="actuator-desc" id="light-desc">Automatic: Flashes visual alert during hazard.</p>
+                            
+                            <!-- PWM Dimming Intensity Slider -->
+                            <div class="actuator-dimmer" id="light-dimmer-container">
+                                <div class="actuator-dimmer-header">
+                                    <span><i class="fa-solid fa-sun" style="color: #d97706;"></i> PWM Brightness</span>
+                                    <span class="actuator-dimmer-val" id="light-brightness-val">100%</span>
+                                </div>
+                                <input type="range" class="actuator-slider" id="light-brightness-slider" min="0" max="100" value="100" oninput="onLightBrightnessInput(this.value)" onchange="sendLightBrightness(this.value)">
+                            </div>
+                        </div>
+                        <div class="actuator-actions">
+                            <button type="button" class="btn-actuator stop" id="btn-light-stop" onclick="setDeviceMode('light', 'STOPPED')">
+                                <i class="fa-solid fa-power-off"></i> Stop
+                            </button>
+                            <button type="button" class="btn-actuator resume active" id="btn-light-resume" onclick="setDeviceMode('light', 'NORMAL')">
+                                <i class="fa-solid fa-play"></i> Resume
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alert History Section -->
+            <section class="alert-history">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="margin: 0; font-size: 1.2rem;">Alert History (<span id="alert-chem-title">Chemical</span>)</h2>
+                    <button id="view-history-btn" class="btn"><i class="fa-solid fa-clock-rotate-left"></i> View Full History</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Danger State</th>
+                                <th>Threshold Breach Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-tbody">
+                            <!-- Alert rows will be injected here via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2><i class="fa-solid fa-clipboard-list"></i> Readings History (<span id="history-modal-chem-title">Chemical</span>)</h2>
+            <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Temperature</th>
+                            <th>Humidity</th>
+                            <th>Distance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <!-- History rows will be injected here via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="header.js"></script>
+    <script src="app.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>
